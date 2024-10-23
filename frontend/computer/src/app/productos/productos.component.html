@@ -1,0 +1,136 @@
+<h1>Productos</h1>
+<p-toast></p-toast>
+<p-confirmDialog></p-confirmDialog>
+<button 
+    pButton 
+    pRipple 
+    label="Crear Producto" 
+    class="p-button-success"
+    (click)="mostrarDialogo()">
+</button>
+<p-table [value]="productos" dataKey="id" editMode="row" [tableStyle]="{ 'min-width': '50rem' }">
+    <ng-template pTemplate="header">
+        <tr>
+            <th>Id</th>
+            <th>Marca</th>
+            <th>Modelo</th>
+            <th>Producto</th>
+            <th>Descripción</th>
+            <th>Acciones</th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-producto let-editing="editing" let-ri="rowIndex">
+        <tr [pEditableRow]="producto">
+            <td>{{ producto.id }}</td>
+            <td>{{ producto.nombreMarca }}</td>
+            <td>
+                <p-cellEditor>
+                    <ng-template pTemplate="input">
+                        <p-dropdown appendTo="body"
+                            [options]="modelos" 
+                            [(ngModel)]="modeloSeleccionado" 
+                            optionLabel="modelo" 
+                            placeholder="Seleccione un modelo" />
+                    </ng-template>
+                    <ng-template pTemplate="output">
+                        {{producto.nombreModelo}}
+                    </ng-template>
+                </p-cellEditor>
+            </td>
+            <td>
+                <p-cellEditor>
+                    <ng-template pTemplate="input">
+                        <input 
+                            pInputText 
+                            type="text" 
+                            [(ngModel)]="producto.producto" />
+                    </ng-template>
+                    <ng-template pTemplate="output">
+                        {{producto.producto}}
+                    </ng-template>
+                </p-cellEditor>
+            </td>
+            <td>
+                <p-cellEditor>
+                    <ng-template pTemplate="input">
+                        <input 
+                            pInputText 
+                            type="text" 
+                            [(ngModel)]="producto.descripcion" />
+                    </ng-template>
+                    <ng-template pTemplate="output">
+                        {{producto.descripcion}}
+                    </ng-template>
+                </p-cellEditor>
+            </td>
+            <td>
+                <div class="flex align-items-center justify-content-center gap-2">
+                    <button 
+                        *ngIf="!editing" 
+                        pButton 
+                        pRipple 
+                        type="button" 
+                        pInitEditableRow 
+                        icon="pi pi-pencil" 
+                        (click)="onRowEditInit(producto)" 
+                        class="p-button-rounded p-button-text">
+                    </button>
+                    <button 
+                        *ngIf="!editing" 
+                        pButton 
+                        pRipple 
+                        type="button" 
+                        icon="pi pi-trash" 
+                        severity="danger"
+                        (click)="eliminarProducto(producto)" 
+                        class="p-button-rounded p-button-text">
+                    </button>
+                    <button 
+                        *ngIf="editing" 
+                        pButton 
+                        pRipple 
+                        type="button" 
+                        pSaveEditableRow 
+                        icon="pi pi-check" 
+                        (click)="onRowEditSave(producto)" 
+                        class="p-button-rounded p-button-text p-button-success mr-2">
+                    </button>
+                    <button 
+                        *ngIf="editing" 
+                        pButton pRipple 
+                        type="button" 
+                        pCancelEditableRow 
+                        icon="pi pi-times" 
+                        (click)="onRowEditCancel(producto, ri)" 
+                        class="p-button-rounded p-button-text p-button-danger">
+                    </button>
+                </div>
+            </td>
+        </tr>
+    </ng-template>
+</p-table>
+
+<p-dialog header="Crear Producto" [modal]="true" [(visible)]="visible" [style]="{ width: '25rem' }">
+    <span class="p-text-secondary block mb-5">Datos del Producto</span>
+    <div class="flex align-items-center gap-3 mb-3">
+        <label for="modelo" class="font-semibold w-6rem">Modelos</label>
+        <p-dropdown 
+            id="modelo"
+            [options]="modelos" 
+            [(ngModel)]="modeloSeleccionado" 
+            optionLabel="modelo" 
+            placeholder="Seleccione un modelo" />
+    </div>
+    <div class="flex align-items-center gap-3 mb-3">
+        <label for="producto" class="font-semibold w-6rem">Producto</label>
+        <input pInputText [(ngModel)]="nuevoProducto.producto" id="producto" class="flex-auto" autocomplete="off" />
+    </div>
+    <div class="flex align-items-center gap-3 mb-3">
+        <label for="descripcion" class="font-semibold w-6rem">Descripción</label>
+        <input pInputText [(ngModel)]="nuevoProducto.descripcion" id="descripcion" class="flex-auto" autocomplete="off" />
+    </div>
+    <div class="flex justify-content-end gap-2">
+        <p-button label="Cancelar" severity="secondary" (click)="visible = false"></p-button>
+        <p-button label="Guardar" (click)="guardarNuevoProducto()"></p-button>
+    </div>
+</p-dialog>

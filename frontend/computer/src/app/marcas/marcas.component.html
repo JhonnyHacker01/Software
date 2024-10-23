@@ -1,0 +1,91 @@
+<h1>Marcas</h1>
+<p-toast />
+<p-confirmDialog />
+<button 
+    pButton 
+    pRipple 
+    label="Crear Marca" 
+    class="p-button-success"
+    (click)="mostrarDialogo()">
+</button>
+<p-table [value]="marcas" dataKey="id" editMode="row" [tableStyle]="{ 'min-width': '50rem' }">
+    <ng-template pTemplate="header">
+        <tr>
+            <th>Id</th>
+            <th>Marca</th>
+            <th>Acciones</th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-marca let-editing="editing" let-ri="rowIndex">
+        <tr [pEditableRow]="marca">
+            <td>{{ marca.id }}</td>
+            <td>
+                <p-cellEditor>
+                    <ng-template pTemplate="input">
+                        <input 
+                            pInputText 
+                            type="text" 
+                            [(ngModel)]="marca.marca" />
+                    </ng-template>
+                    <ng-template pTemplate="output">
+                        {{marca.marca}}
+                    </ng-template>
+                </p-cellEditor>
+            </td>
+            <td>
+                <div class="flex align-items-center justify-content-center gap-2">
+                    <button 
+                        *ngIf="!editing" 
+                        pButton 
+                        pRipple 
+                        type="button" 
+                        pInitEditableRow 
+                        icon="pi pi-pencil" 
+                        (click)="onRowEditInit(marca)" 
+                        class="p-button-rounded p-button-text">
+                    </button>
+                    <button 
+                        *ngIf="!editing" 
+                        pButton 
+                        pRipple 
+                        type="button" 
+                        icon="pi pi-trash" 
+                        severity="danger"
+                        (click)="eliminarMarca(marca)" 
+                        class="p-button-rounded p-button-text">
+                    </button>
+                    <button 
+                        *ngIf="editing" 
+                        pButton 
+                        pRipple 
+                        type="button" 
+                        pSaveEditableRow 
+                        icon="pi pi-check" 
+                        (click)="onRowEditSave(marca)" 
+                        class="p-button-rounded p-button-text p-button-success mr-2">
+                    </button>
+                    <button 
+                        *ngIf="editing" 
+                        pButton pRipple 
+                        type="button" 
+                        pCancelEditableRow 
+                        icon="pi pi-times" 
+                        (click)="onRowEditCancel(marca, ri)" 
+                        class="p-button-rounded p-button-text p-button-danger">
+                    </button>
+                </div>
+            </td>
+        </tr>
+    </ng-template>
+</p-table>
+<p-dialog header="Crear Marca" [modal]="true" [(visible)]="visible" [style]="{ width: '25rem' }">
+    <span class="p-text-secondary block mb-5">Datos de la marca</span>
+    <div class="flex align-items-center gap-3 mb-3">
+        <label for="marca" class="font-semibold w-6rem">Marca</label>
+        <input pInputText [(ngModel)]="nuevaMarca.marca" id="marca" class="flex-auto" autocomplete="off" />
+    </div>
+    <div class="flex justify-content-end gap-2">
+        <p-button label="Cancelar" severity="secondary" (click)="visible = false" />
+        <p-button label="Guardar" (click)="guardarNuevaMarca()" />
+    </div>
+</p-dialog>
